@@ -33,5 +33,8 @@ class HTTPSignatureAuth(AuthBase):
                 host=urlparse(r.url).netloc if self.uses_host else None,
                 method=r.method,
                 path=r.path_url)
+        headers['signature'] = headers.pop('authorization')
+        assert headers['signature'].startswith('Signature ')
+        headers['signature'] = headers['signature'][len('Signature '):]
         r.headers.update(headers)
         return r
