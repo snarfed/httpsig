@@ -20,12 +20,16 @@ class HTTPSignatureAuth(requests.auth.AuthBase):
     `algorithm` is one of the six specified algorithms
       headers is a list of http headers to be included in the signing string,
       defaulting to "Date" alone.
+    `sign_header`, optional, header used to include signature. defaults to
+       'authorization'.
     """
-    def __init__(self, key_id='', secret='', algorithm=None, headers=None):
+    def __init__(self, key_id='', secret='', algorithm=None, headers=None,
+                 sign_header='authorization'):
         headers = headers or []
         self.header_signer = HeaderSigner(
                                 key_id=key_id, secret=secret,
-                                algorithm=algorithm, headers=headers)
+                                algorithm=algorithm, headers=headers,
+                                sign_header=sign_header)
         self.uses_host = 'host' in [h.lower() for h in headers]
 
     def __call__(self, r):
